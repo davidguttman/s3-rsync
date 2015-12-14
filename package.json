@@ -1,0 +1,50 @@
+{
+  "name": "s3-rsync",
+  "version": "1.0.0",
+  "description": "Sync a local directory to S3, recursively, with files over 5gb.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js",
+    "example": "npm run clear-example && npm run example-bin",
+    "clear-example": "rm -rf example/remote/some_bucket/*",
+    "example-server": "node example/server.js",
+    "example-bin": "bin/s3-rsync -k 123 -s abc -b some_bucket -e localhost -p 4568 -P test/local"
+  },
+  "keywords": [],
+  "author": "David Guttman <david@guttman.io> (http://davidguttman.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "human-format": "^0.5.1",
+    "knox": "^0.9.2",
+    "knox-mpu": "^0.1.6",
+    "ls-r": "^0.2.1",
+    "map-async": "^0.1.1",
+    "progress": "^1.1.8",
+    "run-parallel": "^1.1.4",
+    "run-series": "^1.1.4",
+    "s3-lister": "^0.1.0",
+    "wildemitter": "^1.2.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.4.4",
+    "s3rver": "0.0.12",
+    "tape": "^4.2.2"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidguttman/s3-rsync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/davidguttman/s3-rsync/issues"
+  },
+  "homepage": "https://github.com/davidguttman/s3-rsync",
+  "bin": {
+    "s3-rsync": "./bin/s3-rsync"
+  }
+
+}

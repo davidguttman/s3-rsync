@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+
+var s3sync = require('..')
+var path = require('path')
+var resolve = path.resolve
+var program = require('commander')
+var Progress = require('progress')
+var humanFormat = require('human-format')
+
+program
+  .version(require('../package.json'))
+  .usage('-k <key> -s <secret> -b <bucket> local-dir [s3-prefix]')
+  .option('-k, --key <api key>', 'specify s3 api key')
+  .option('-s, --secret <secret>', 'specify s3 secret')
+  .option('-b, --bucket <bucket>', 'specify s3 bucket')
+  .option('-e, --endpoint <endpoint>', 'specify s3 endpoint')
+  .option('-p, --port <port>', 'specify s3 port')
+  .option('-P, --path-style', 'force s3 "path style"')
+  .parse(process.argv)
+
+function die (msg) {
+  console.error('Usage: s3-rsync -k <key> -s <secret> -b <bucket> local-dir [s3-prefix]')
+  console.error(msg)
+  process.exit(1)
+}
+
+var localRaw = program.args.shift() || die('Please provide a local directory')
+
+var local = resolve(localRaw)
+
+var remote = program.args.shift() || ''
+
+var key = program.key || die('Please provide an API key')
+var secret = program.secret || die('Please provide an API secret')
+var bucket = program.bucket || die('Please provide a bucket')
+
+var opts = {
+  local: local,
+  remote: remote,
+  key: key,
+  secret: secret,
+  bucket: bucket,
+  endpoint: program.endpoint || 's3.amazonaws.com',
+  port: program.port,
+  style: program.pathStyle ? 'path' : undefined
+}
+
+var sync = s3sync(opts, function (err) {
+  if (err) return console.error(err)
+  console.log('DONE!')
+})
+
+var nFiles
+var iFile = 1
+sync.on('transferList', function (list) {
+  if (!list.size) return console.log('Directory synced, no files to transfer.')
+  nFiles = list.files.length
+})
+
+sync.on('fileTransferred', function () {
+  iFile += 1
+})
+
+var bar
+var lastWritten = 0
+var lastTime = Date.now()
+var lastFile
+
+sync.on('progress', function (prog) {
+  lastFile = prog.file.file.replace(local, '')
+
+  bar = bar || new Progress(
+    ':lastFile :iFile/:nFiles [:bar] :percent :speed Elapsed: :elapseds ETA: :etas', {
+      total: prog.allTotal,
+      width: 30,
+      complete: '=',
+      incomplete: ' '
+    }
+  )
+
+  var now = Date.now()
+  var written = prog.allWritten - lastWritten
+  var elapsed = (now - lastTime)/1000
+  var speed = humanFormat(written / elapsed) + '/s'
+
+  var pct = prog.allWritten / prog.allTotal
+  bar.update(pct, {
+    speed: speed,
+    iFile: iFile,
+    nFiles: nFiles,
+    lastFile: lastFile
+  })
+
+})
