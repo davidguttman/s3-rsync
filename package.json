@@ -46,5 +46,4 @@
   "bin": {
     "s3-rsync": "./bin/s3-rsync"
   }
-
 }
