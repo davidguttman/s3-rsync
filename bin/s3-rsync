@@ -42,6 +42,8 @@ var key = program.key || defaultCreds.key || die('Please provide an API key')
 var secret = program.secret || defaultCreds.secret || die('Please provide an API secret')
 var bucket = program.bucket || defaultCreds.bucket || die('Please provide a bucket')
 
+var endpoint = program.endpoint || defaultCreds.endpoint || 's3.amazonaws.com'
+
 var opts = {
   local: local,
   remote: remote,
