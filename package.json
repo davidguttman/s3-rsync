@@ -1,6 +1,6 @@
 {
   "name": "s3-rsync",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Sync a local directory to S3, recursively, with files over 5gb.",
   "main": "index.js",
   "scripts": {
