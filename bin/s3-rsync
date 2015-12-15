@@ -11,6 +11,7 @@ var humanFormat = require('human-format')
 var defaultCreds
 try {
   defaultCreds = require(process.env.HOME + '/.s3-rsync.json')
+  console.log('.s3-rsync.json found')
 } catch (err) {
   defaultCreds = {}
 }
@@ -50,7 +51,7 @@ var opts = {
   key: key,
   secret: secret,
   bucket: bucket,
-  endpoint: program.endpoint || 's3.amazonaws.com',
+  endpoint: endpoint,
   port: program.port,
   style: program.pathStyle ? 'path' : undefined
 }
@@ -65,9 +66,10 @@ var iFile = 1
 sync.on('transferList', function (list) {
   if (!list.size) return console.log('Directory synced, no files to transfer.')
   nFiles = list.files.length
+  console.log('Transferring %d files to %s on %s', nFiles, bucket, endpoint)
 })
 
-sync.on('fileTransferred', function () {
+sync.on('fileTransferred', function (file) {
   iFile += 1
 })
 
