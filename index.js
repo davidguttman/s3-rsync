@@ -152,7 +152,7 @@ function putFile (client, file, dest, cb) {
 }
 
 function putMPFile (client, file, dest, cb) {
-  return MPU({
+  return new MPU({
     client: client,
     file: file,
     objectName: dest

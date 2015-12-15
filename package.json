@@ -20,6 +20,7 @@
     "knox-mpu": "^0.1.6",
     "ls-r": "^0.2.1",
     "map-async": "^0.1.1",
+    "pretty-ms": "^2.1.0",
     "progress": "^1.1.8",
     "run-parallel": "^1.1.4",
     "run-series": "^1.1.4",

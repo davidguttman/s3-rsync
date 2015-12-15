@@ -3,6 +3,7 @@
 var s3sync = require('..')
 var path = require('path')
 var resolve = path.resolve
+var ms = require('pretty-ms')
 var program = require('commander')
 var Progress = require('progress')
 var humanFormat = require('human-format')
@@ -63,6 +64,7 @@ sync.on('fileTransferred', function () {
 
 var bar
 var lastWritten = 0
+var startTime = Date.now()
 var lastTime = Date.now()
 var lastFile
 
@@ -70,7 +72,7 @@ sync.on('progress', function (prog) {
   lastFile = prog.file.file.replace(local, '')
 
   bar = bar || new Progress(
-    ':lastFile :iFile/:nFiles [:bar] :percent :speed Elapsed: :elapseds ETA: :etas', {
+    'File: :lastFile (:iFile/:nFiles) Elapsed: :_elapsed Speed: :speed ETA: :_eta [:bar] :percent', {
       total: prog.allTotal,
       width: 30,
       complete: '=',
@@ -82,13 +84,18 @@ sync.on('progress', function (prog) {
   var written = prog.allWritten - lastWritten
   var elapsed = (now - lastTime)/1000
   var speed = humanFormat(written / elapsed) + '/s'
+  var left = prog.allTotal - prog.allWritten
+  var avgSpeed = prog.allWritten / (Date.now() - startTime)
+  var eta = left / avgSpeed
 
   var pct = prog.allWritten / prog.allTotal
   bar.update(pct, {
     speed: speed,
     iFile: iFile,
     nFiles: nFiles,
-    lastFile: lastFile
+    lastFile: lastFile,
+    _eta: ms(eta),
+    _elapsed: ms(elapsed)
   })
 
 })
