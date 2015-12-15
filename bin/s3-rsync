@@ -100,9 +100,18 @@ sync.on('progress', function (prog) {
     speed: speed,
     iFile: iFile,
     nFiles: nFiles,
-    lastFile: lastFile,
+    lastFile: truncate(lastFile, 30),
     _eta: ms(eta),
     _elapsed: ms(elapsed*1000)
   })
 
 })
+
+function truncate (file, maxLength) {
+  maxLength = maxLength || 30
+  if (file.length < maxLength) return file
+  var basename = path.basename(file)
+  if (basename.length < maxLength) return basename
+
+  return basename.slice(0, maxLength) + '...'
+}
