@@ -81,7 +81,7 @@ sync.on('progress', function (prog) {
   lastFile = prog.file.file.replace(local, '')
 
   bar = bar || new Progress(
-    'File: :lastFile (:iFile/:nFiles) Elapsed: :_elapsed Speed: :speed ETA: :_eta [:bar] :percent', {
+    '[:bar] :percent  Elapsed: :_elapsed  Speed: :speed  ETA: :_eta  (:iFile/:nFiles) :lastFile', {
       total: prog.allTotal,
       width: 30,
       complete: '=',
