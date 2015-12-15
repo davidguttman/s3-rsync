@@ -66,7 +66,8 @@ var iFile = 1
 sync.on('transferList', function (list) {
   if (!list.size) return console.log('Directory synced, no files to transfer.')
   nFiles = list.files.length
-  console.log('Transferring %d files to %s on %s', nFiles, bucket, endpoint)
+  var size = humanFormat(list.size).replace(' ', '')
+  console.log('Transferring %d files (%s) to %s on %s', nFiles, size, bucket, endpoint)
 })
 
 sync.on('fileTransferred', function (file) {
