@@ -8,6 +8,13 @@ var program = require('commander')
 var Progress = require('progress')
 var humanFormat = require('human-format')
 
+var defaultCreds
+try {
+  defaultCreds = require(process.env.HOME + '/.s3-rsync.json')
+} catch (err) {
+  defaultCreds = {}
+}
+
 program
   .version(require('../package.json'))
   .usage('-k <key> -s <secret> -b <bucket> local-dir [s3-prefix]')
@@ -31,9 +38,9 @@ var local = resolve(localRaw)
 
 var remote = program.args.shift() || ''
 
-var key = program.key || die('Please provide an API key')
-var secret = program.secret || die('Please provide an API secret')
-var bucket = program.bucket || die('Please provide a bucket')
+var key = program.key || defaultCreds.key || die('Please provide an API key')
+var secret = program.secret || defaultCreds.secret || die('Please provide an API secret')
+var bucket = program.bucket || defaultCreds.bucket || die('Please provide a bucket')
 
 var opts = {
   local: local,
@@ -95,7 +102,7 @@ sync.on('progress', function (prog) {
     nFiles: nFiles,
     lastFile: lastFile,
     _eta: ms(eta),
-    _elapsed: ms(elapsed)
+    _elapsed: ms(elapsed*1000)
   })
 
 })
