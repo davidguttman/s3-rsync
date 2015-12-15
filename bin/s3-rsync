@@ -83,9 +83,9 @@ sync.on('progress', function (prog) {
   lastFile = prog.file.file.replace(local, '')
 
   bar = bar || new Progress(
-    '[:bar] :percent  Elapsed: :_elapsed  Speed: :speed  ETA: :_eta  (:iFile/:nFiles) :lastFile', {
+    '[:bar] :percent  :_elapsed  :written  :speed  ETA: :_eta  (:iFile/:nFiles) :lastFile', {
       total: prog.allTotal,
-      width: 30,
+      width: 20,
       complete: '=',
       incomplete: ' '
     }
@@ -94,7 +94,7 @@ sync.on('progress', function (prog) {
   var now = Date.now()
   var written = prog.allWritten - lastWritten
   var elapsed = (now - lastTime)/1000
-  var speed = humanFormat(written / elapsed) + '/s'
+  var speed = humanFormat(written / elapsed).replace(' ', '') + '/s'
   var left = prog.allTotal - prog.allWritten
   var avgSpeed = prog.allWritten / (Date.now() - startTime)
   var eta = left / avgSpeed
@@ -106,7 +106,8 @@ sync.on('progress', function (prog) {
     nFiles: nFiles,
     lastFile: truncate(lastFile, 30),
     _eta: ms(eta),
-    _elapsed: ms(elapsed*1000)
+    _elapsed: ms(elapsed*1000),
+    written: humanFormat(prog.allWritten).replace(' ', '')
   })
 
 })
