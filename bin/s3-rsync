@@ -72,6 +72,9 @@ sync.on('transferList', function (list) {
 
 sync.on('fileTransferred', function (file) {
   iFile += 1
+  var fn = file.file.replace(local, '')
+  var size = humanFormat(file.size).replace(' ', '')
+  console.log('\nTransferred %s (%s)', fn, size)
 })
 
 var bar
