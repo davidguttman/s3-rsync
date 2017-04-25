@@ -20,7 +20,7 @@ and appending to your cron file, for example:
 
 (above should run `s3-rsync` every day at 2:30AM)
 
-but don't forget to restard the cron daemon:
+but don't forget to restart the cron daemon:
 
     service crond restart
 
